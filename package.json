@@ -1,0 +1,19 @@
+{
+  "name": "magicians",
+  "version": "1.0.0",
+  "description": "restful api of the harry potter wizard world",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "harry",
+    "potter",
+    "api"
+  ],
+  "author": "Jay Sharma",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
