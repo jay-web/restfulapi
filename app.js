@@ -90,6 +90,7 @@ app.patch("/api/v1/wizards/:id/:alive", (req, res) => {
             status: "failed",
             message: "invalid id"
         })
+        return;
     }
 
     const wiz = wizards.find((e) => {
@@ -101,6 +102,7 @@ app.patch("/api/v1/wizards/:id/:alive", (req, res) => {
             status: "failed",
             message: "invalid id"
         })
+        return;
     }
 
     const updatedWiz = wizards.map((e) => {
@@ -124,6 +126,36 @@ app.patch("/api/v1/wizards/:id/:alive", (req, res) => {
     
 
   
+});
+
+
+// ? ================================
+
+app.delete("/api/v1/wizards/:id", (req, res) => {
+
+    const requestId = req.params.id * 1;
+
+    const UpdatedWiz = wizards.filter((e) => {
+        return e.id !== requestId;
+    });
+
+    console.log(UpdatedWiz);
+
+    if(!UpdatedWiz){
+        res.status(404).json({
+            status: "failed",
+            message: "Invalid id"
+        })
+        return;
+    }
+
+    fs.writeFile(`${__dirname}/dev-data/data/db.json`, JSON.stringify(UpdatedWiz), () => {
+        res.status(200).json({
+            status: "Success",
+            data: UpdatedWiz
+        });
+    } );
+   
 });
 
 
