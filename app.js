@@ -1,7 +1,6 @@
 const fs = require('fs');
 const express = require("express");
 
-
 const app = express();
 
 const port = 3000;
@@ -13,10 +12,9 @@ app.use(express.json());            // middleware to parse req.body
 const wizards = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/db.json`));
 
 
-// ? ==============================
+// * ==========CALLBACKS==============
 
-// * GET METHOD / root , to fetch all the data
-app.get("/api/v1/wizards", (req, res) => {
+const getAllData =  (req, res) => {
 
     res
         .status(200)
@@ -28,13 +26,9 @@ app.get("/api/v1/wizards", (req, res) => {
             }
         });
     
-});
+};
 
-// ? ================================
-
-// * GET METHOD , to get the data as per search keyword
-
-app.get("/api/v1/wizards/:name", (req, res) => {
+const getWizard = (req, res) =>  {
 
     let keyword = req.params.name;
     let wiz = wizards.filter((e) => {
@@ -55,11 +49,9 @@ app.get("/api/v1/wizards/:name", (req, res) => {
                 wizard: wiz
             }
         })
-});
+}
 
-// ? =================================
-
-app.post("/api/v1/wizards", (req, res) => {
+const createWizard = (req, res) => {
 
     const newId = wizards.length + 1;              // * Just to create id for new object
     const newWizard = Object.assign({id: newId}, req.body);     // * Add new id with new data
@@ -78,11 +70,9 @@ app.post("/api/v1/wizards", (req, res) => {
         });
     });
 
-});
+}
 
-// ? ================================
-
-app.patch("/api/v1/wizards/:id/:alive", (req, res) => {
+const updateWizard = (req, res) => {
     console.log(req.params);
 
     if(req.params.id > wizards.length){             // * If id is greater than list.length
@@ -122,16 +112,9 @@ app.patch("/api/v1/wizards/:id/:alive", (req, res) => {
             }
         })
     })
+}
 
-    
-
-  
-});
-
-
-// ? ================================
-
-app.delete("/api/v1/wizards/:id", (req, res) => {
+const deleteWizard = (req, res) => {
 
     const requestId = req.params.id * 1;
 
@@ -156,7 +139,20 @@ app.delete("/api/v1/wizards/:id", (req, res) => {
         });
     } );
    
-});
+}
+
+// * ======== Routes =============
+
+
+app.get("/api/v1/wizards", getAllData);
+
+app.get("/api/v1/wizards/:name", getWizard);
+
+app.post("/api/v1/wizards", createWizard);
+
+app.patch("/api/v1/wizards/:id/:alive", updateWizard);
+
+app.delete("/api/v1/wizards/:id", deleteWizard);
 
 
 
