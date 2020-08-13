@@ -4,7 +4,7 @@
   "description": "restful api of the harry potter wizard world",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon server.js"
   },
   "keywords": [
     "harry",
