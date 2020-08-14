@@ -3,10 +3,38 @@ const fs = require('fs');
 // * Read the data from file
 const wizards = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/db.json`));
 
+// * ===== Param Middleware ============
+
+
+exports.checkId = (req, res, next, val) => {
+// * If id is greater than list.length means id is not available
+    console.log("params id ", val);
+    if(val * 1 > wizards.length){             
+        res.status(404).json({
+            status: "failed",
+            message: "invalid id"
+        })
+        return;
+    }
+    next();
+}
+
+
+exports.checkBody = (req, res, next) => {
+    
+    if((!req.body.name) || (!req.body.house)){
+        return res.status(404).json({
+            status: "failed",
+            message: "Name or House property is unavailable"
+        })
+    }
+    next();
+}
+
+
 //* ==========CALLBACKS==============
 
 exports.getAllData =  (req, res) => {
-
     res
         .status(200)
         .json({
@@ -52,7 +80,7 @@ exports.createWizard = (req, res) => {
 
     // ? write the udpated list of wizards in file
 
-    fs.writeFile(`${__dirname}/dev-data/data/db.json`, JSON.stringify(wizards), () => {
+    fs.writeFile(`${__dirname}/../dev-data/data/db.json`, JSON.stringify(wizards), () => {
         res.status(200).json({
             status: "success",
             data: {
@@ -66,13 +94,6 @@ exports.createWizard = (req, res) => {
 exports.updateWizard = (req, res) => {
     console.log(req.params);
 
-    if(req.params.id > wizards.length){             // * If id is greater than list.length
-        res.status(404).json({
-            status: "failed",
-            message: "invalid id"
-        })
-        return;
-    }
 
     const wiz = wizards.find((e) => {
         return e.id == req.params.id;
@@ -93,7 +114,6 @@ exports.updateWizard = (req, res) => {
         return e; 
     });
 
-    console.log(updatedWiz);
 
     fs.writeFile(`${__dirname}/dev-data/data/db.json`, JSON.stringify(updatedWiz), () => {
         res.status(200).json({
